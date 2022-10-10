@@ -1,8 +1,7 @@
-import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router';
 import Cookies from 'cookies';
-const Logout: NextPage = () => {
+const Logout = () => {
     const router = useRouter();
     router.push('/');
     return (

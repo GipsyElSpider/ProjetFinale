@@ -1,6 +1,5 @@
-import type { NextPage } from 'next';
 import Link from 'next/link';
-const Header: NextPage = ({ auth }) => {
+const Header = ({ auth }) => {
     return (
         <div className="w-full flex p-6 bg-blue-600 justify-between">
             <Link href={"/"}>

@@ -1,11 +1,10 @@
-import type { NextPage } from 'next'
 import { useState } from 'react';
 import Head from 'next/head'
 import Image from 'next/image'
 import Header from "../components/Header"
 import Cookies from 'cookies'
 
-const Home: NextPage = (props) => {
+const Home = (props) => {
   const [auth, setAuth] = useState(props.user);
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">

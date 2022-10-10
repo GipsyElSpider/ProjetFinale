@@ -1,23 +1,22 @@
-import type { NextPage } from 'next';
 import { useState } from 'react';
 import Head from 'next/head';
 import Header from "../components/Header";
 import axios from "axios"
 import { useRouter } from 'next/router';
 import Cookies from 'cookies'
-const Login: NextPage = (props) => {
+const Register = (props) => {
     const router = useRouter()
     const [data, setData] = useState({
         "username": '',
-        "password": ''
+        "password": '',
+        "confirm-password": ''
     });
     const [message, setMessage] = useState("");
-    async function handleSubmit(event: any) {
-      console.log(data)
+    async function handleSubmit(event) {
         event.preventDefault();
         let config = {
             method: 'POST',
-            url: 'http://localhost:8888/api/login',
+            url: 'http://localhost:8888/api/register',
             headers: {
             },
             data:
@@ -71,6 +70,17 @@ const Login: NextPage = (props) => {
                             required
                         />
                     </div>
+                    <div className='w-full flex flex-col mb-6'>
+                        <label htmlFor='confirm-password'>Confirmer Mot de passe:</label>
+                        <input
+                            value={data["confirm-password"]}
+                            onChange={(e) => setData({ ...data, "confirm-password": e.target.value })}
+                            type='password'
+                            name='confirm-password'
+                            id='confirm-password'
+                            required
+                        />
+                    </div>
                     <div className='w-full flex justify-center'>
                         <button className='border rounded-xl w-1/2' type='submit'>
                             Valider
@@ -83,7 +93,7 @@ const Login: NextPage = (props) => {
     )
 }
 
-export default Login
+export default Register
 
 export async function getServerSideProps({ req, res }) {
     const cookies = new Cookies(req, res)
