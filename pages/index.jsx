@@ -3,7 +3,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Header from "../components/Header"
 import Cookies from 'cookies'
-
+import PhotoUpload from "../components/PhotoUpload"
 const Home = (props) => {
   const [auth, setAuth] = useState(props.user);
   return (
@@ -16,7 +16,7 @@ const Home = (props) => {
       <Header auth={auth} />
 
       <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-
+        {auth ? <PhotoUpload username={auth}/> : null}
       </main>
 
       <footer className="flex h-24 w-full items-center justify-center border-t">

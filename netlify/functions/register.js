@@ -1,9 +1,11 @@
 const Joi = require("joi");
 const mongoose = require('mongoose');
 const { UserModel } = require("../../model/User");
+const { ProfileModel } = require("../../model/Profile")
 //const { withSession, getSession } = require('netlify-functions-session-cookie');
 const crypto = require('crypto');
 const cookie = require("cookie")
+
 mongoose.connect("mongodb://localhost:27017/projet-3wa", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -33,7 +35,7 @@ exports.handler = async function (event, context) {
 
         if (alreadyRegister[0]) {
             return {
-                statusCode: 400,
+                statusCode: 403,
                 body: JSON.stringify({ message: "Username already use" }),
             };
         };
@@ -41,7 +43,7 @@ exports.handler = async function (event, context) {
         const hash = crypto.createHash('sha256').update(params.password).digest('hex');
 
         await UserModel.create({ username: params.username, password: hash });
-
+        await ProfileModel.create({ username: params.username });
         const myCookie = cookie.serialize('user', params.username, {
             secure: true,
             httpOnly: true,

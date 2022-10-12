@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Header from "../components/Header";
 import axios from "axios"
@@ -6,12 +6,22 @@ import { useRouter } from 'next/router';
 import Cookies from 'cookies'
 const Register = (props) => {
     const router = useRouter()
-    const [data, setData] = useState({
-        "username": '',
-        "password": '',
-        "confirm-password": ''
-    });
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
+    //const [btn, setBtn] = useState(0);
+    /* useEffect(() => {
+        setBtn(document.querySelector("#btn"));
+    }, []); */
+
+    function handleChangeUsername(event) {
+        setUsername(event.target.value)
+        return null;
+    };
+    function handleChangePassword(event) {
+        setPassword(event.target.value)
+        return null;
+    };
     async function handleSubmit(event) {
         event.preventDefault();
         let config = {
@@ -21,8 +31,8 @@ const Register = (props) => {
             },
             data:
             {
-                username: data.username,
-                password: data.password
+                username,
+                password
             }
         };
 
@@ -34,15 +44,27 @@ const Register = (props) => {
                 console.log(error)
                 return (error)
             });
-        console.log('test', result);
-        if (result?.status === 400 && result?.response?.data?.message === "Username already use") {
-            console.log("here")
+            
+        if (result?.response?.status === 403) {
             setMessage("Pseudo déja utilisé");
+            return;
         }
         if (result?.status !== 200) return
         router.push('/');
         return
-    }
+    };
+
+    //let position = 0;
+
+    /* if (btn && (!(password !== "") || username === "")) {
+        btn.addEventListener("mouseover", function () {
+            position === 300 ? position = 0 : position = 300;
+            btn.style.transform = `translate(${position}%, 0px)`;
+            btn.style.transition = "all 0.3s ease";
+            return
+        });
+    }; */
+
     return (
         <div className="flex min-h-screen flex-col items-center justify-center bg-blue-200 ">
             <Head>
@@ -55,36 +77,32 @@ const Register = (props) => {
             <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
                 <form className='flex flex-col w-1/3 text-left p-6 border' onSubmit={handleSubmit}>
                     <div className='w-full flex flex-col mb-6'>
-                        {message ? message : null}
+                        {message ? <p className='font-bold text-red-600'>{message}</p> : null}
                         <label htmlFor='username'>Pseudo:</label>
-                        <input value={data.username} onChange={(e) => setData({ ...data, username: e.target.value })} type='text' name='username' id='username' required />
+                        <input
+                            value={username}
+                            onInput={handleChangeUsername}
+                            type='text'
+                            name='username'
+                            minLength={4}
+                            required
+                        />
                     </div>
                     <div className='w-full flex flex-col mb-6'>
                         <label htmlFor='password'>Mot de passe:</label>
                         <input
-                            value={data.password}
-                            onChange={(e) => setData({ ...data, password: e.target.value })}
+                            value={password}
+                            onInput={handleChangePassword}
                             type='password'
                             name='password'
-                            id='password'
+                            minLength={4}
                             required
                         />
                     </div>
-                    <div className='w-full flex flex-col mb-6'>
-                        <label htmlFor='confirm-password'>Confirmer Mot de passe:</label>
-                        <input
-                            value={data["confirm-password"]}
-                            onChange={(e) => setData({ ...data, "confirm-password": e.target.value })}
-                            type='password'
-                            name='confirm-password'
-                            id='confirm-password'
-                            required
-                        />
-                    </div>
-                    <div className='w-full flex justify-center'>
-                        <button className='border rounded-xl w-1/2' type='submit'>
-                            Valider
-                        </button>
+                    <div className='w-full flex overflow-hidden'>
+                        <button id="btn" type="submit">Valider</button>
+                        {/* (btn && (password === "") || username === "") ? <><div id="btn" type="submit">Valider</div></> : <><button id="btnStatic" type="submit">Valider</button></> */}
+                        {/* <button id="btn" type="submit">Valider</button> */}
                     </div>
                 </form>
             </main>
@@ -99,13 +117,13 @@ export async function getServerSideProps({ req, res }) {
     const cookies = new Cookies(req, res)
     const user = cookies.get('user')
     if (user) {
-      res.statusCode = 302;
-      res.setHeader("location", "/");
-      res.end();
-      return
+        res.statusCode = 302;
+        res.setHeader("location", "/");
+        res.end();
+        return
     } else {
-      return {
-        props: { user: null }
-      }
+        return {
+            props: { user: null }
+        }
     }
-  };
+};

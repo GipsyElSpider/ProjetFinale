@@ -12,7 +12,7 @@ const Header = ({ auth }) => {
                             Déconnection
                         </button>
                     </Link>
-                    <Link href={"/"}>
+                    <Link href={`/profile/${auth}`}>
                         <button className='rounded-xl border px-4 py-2 bg-gray-300 font-bold'>
                             {auth}
                         </button>
