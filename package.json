@@ -1,7 +1,9 @@
 {
   "private": true,
   "scripts": {
-    "start": "netlify dev"
+    "start": "netlify dev",
+    "export": "next export",
+    "serve-production": "yarn build && yarn export"
   },
   "dependencies": {
     "@supabase/supabase-js": "^1.35.7",
