@@ -3,7 +3,7 @@
   "scripts": {
     "start": "netlify dev",
     "export": "next export",
-    "serve-production": "yarn build && yarn export"
+    "serve-production": "next build && next export"
   },
   "dependencies": {
     "@supabase/supabase-js": "^1.35.7",
