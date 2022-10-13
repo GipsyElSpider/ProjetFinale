@@ -18,8 +18,8 @@ function profile({ data, user }) {
 
             <Header auth={auth} />
 
-            <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-                <div className="w-2/3 bg-white rounded-xl p-6">
+            <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center bg-bgTest">
+                <div className="w-2/3 rounded-xl p-6">
                     <div className="flex w-2/5">
                         {data[0].link ?
                             <img className="rounded-xl" src={imageLink} alt='Photo de profil' />

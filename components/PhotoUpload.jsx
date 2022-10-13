@@ -51,8 +51,8 @@ const PhotoUpload = ({ username }) => {
 
     if (step === 0) {
         return (
-            <div className='flex'>
-                <button onClick={handleClick} className='font-bold rounded-2xl px-6 py-4 bg-gray-600 h-max flex items-center'> Upload Photo <img className='ml-2 h-4 w-4 box-border' src={"../data/plus-solid.svg"} /></button>
+            <div className='flex mb-8'>
+                <button onClick={handleClick} className='font-bold rounded-2xl px-6 py-4 bg-pink-200 border-2 border-gray-400 h-max flex items-center shadow-lg shadow-pink-400'> Upload Photo <img className='ml-2 h-4 w-4 box-border' src={"../data/plus-solid.svg"} /></button>
             </div>
         )
     } else if (step === 1) {

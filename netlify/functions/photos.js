@@ -23,22 +23,37 @@ exports.handler = async function (event, context) {
 
         /* if(event.queryStringParameters)
         await schema.validateAsync(event.queryStringParameters); */
+        if (event.queryStringParameters.id) {
+            const data = await PhotoModel.find({ _id: event.queryStringParameters.id });
+            console.log(data)
 
-        const data = await PhotoModel.find({_id:event.queryStringParameters.id});   
-        console.log(data)
-
-        if (data[0] === undefined) {
-            return {
-                statusCode: 400,
-                body: JSON.stringify({ message: 'data not found' }),
+            if (data[0] === undefined) {
+                return {
+                    statusCode: 400,
+                    body: JSON.stringify({ message: 'data not found' }),
+                };
             };
-        };
 
-        return {
-            statusCode: 200,
-            body: JSON.stringify({ data:data[0] }),
-        };
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ data: data[0] }),
+            };
+        } else {
+            const data = await PhotoModel.find({}).sort({ created_at: -1 });
+            console.log(data)
 
+            if (data[0] === undefined) {
+                return {
+                    statusCode: 400,
+                    body: JSON.stringify({ message: 'data not found' }),
+                };
+            };
+
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ data: data }),
+            };
+        }
     } catch (err) {
         console.log("error", err);
         return {

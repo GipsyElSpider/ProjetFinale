@@ -1,7 +1,7 @@
 import Link from 'next/link';
 const Header = ({ auth }) => {
     return (
-        <div className="w-full flex p-6 bg-blue-600 justify-between">
+        <div className="w-full flex p-6 bg-discordGray justify-between">
             <Link href={"/"}>
                 <p className='w-1/3'>Home</p>
             </Link>
