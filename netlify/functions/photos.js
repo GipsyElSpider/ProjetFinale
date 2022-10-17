@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Joi = require('joi')
 const { PhotoModel } = require("../../model/Photo");
+const crypto = require("crypto");
 
 mongoose.connect("mongodb://localhost:27017/projet-3wa", {
     useNewUrlParser: true,
@@ -22,14 +23,14 @@ exports.handler = async function (event, context) {
 
         if (event.queryStringParameters.id) {
             const data = await PhotoModel.find({ _id: event.queryStringParameters.id });
-            
+
             if (data[0] === undefined) {
                 return {
                     statusCode: 404,
                     body: JSON.stringify({ message: 'data not found' }),
                 };
             };
-            
+
             return {
                 statusCode: 200,
                 body: JSON.stringify({ data: data[0] }),

@@ -29,8 +29,6 @@ exports.handler = async function (event, context) {
 
         const { fields, files } = await parseMultipartFormData(event);
         const { buffer, ext } = await cropImage(files[0]._readableState.buffer.tail.data);
-        console.log(fields)
-        console.log(buffer, ext)
         const filename = uuid();
         await supabase.storage.from('image').upload(`photos/${filename}.${ext}`, buffer, {
             contentType: `image/${ext}`,

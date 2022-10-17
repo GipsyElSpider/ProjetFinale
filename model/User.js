@@ -8,6 +8,9 @@ const UserSchema = new Schema({
     },
     password: {
         type: String
+    },
+    password: {
+        type: String
     }
 });
 

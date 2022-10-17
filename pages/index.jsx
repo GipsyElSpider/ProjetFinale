@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import Head from 'next/head'
 import Header from "../components/Header"
-import Cookies from 'cookies'
 import PhotoUpload from "../components/PhotoUpload"
 import axios from 'axios';
 import Link from 'next/link';
+import verifyToken from "../middleware/auth"
 const Home = (props) => {
   const [auth, setAuth] = useState(props.user);
   return (
@@ -39,7 +39,7 @@ const Home = (props) => {
 export default Home
 
 export async function getServerSideProps({ req, res }) {
-
+  
   let config = {
     method: 'get',
     url: `http://localhost:8888/api/photos`,
@@ -53,12 +53,10 @@ export async function getServerSideProps({ req, res }) {
     .catch(function (error) {
       return (error)
     });
+    
+  const user = verifyToken(req);
 
-
-  const cookies = new Cookies(req, res)
-  const user = cookies.get('user');
-
-  if (user) {
+  if (user !== "A token is required for authentication") {
     return {
       props: { user, result }
     }

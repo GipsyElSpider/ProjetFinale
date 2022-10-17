@@ -1,12 +1,11 @@
 import axios from "axios";
 import Head from 'next/head';
 import Header from "../../components/Header";
-import Cookies from 'cookies'
+import verifyToken from "../../middleware/auth"
 import { useState } from 'react';
 import ImageUpload from '../../components/ImageUpload';
 
 function profile({ data, user }) {
-    console.log(data[0].link, user)
     const [auth, setAuth] = useState(user);
     const [imageLink, setImageLink] = useState(data[0]?.link ?? '../data/user-upload.svg')
     return (
@@ -24,7 +23,7 @@ function profile({ data, user }) {
                         {data[0].link ?
                             <img className="rounded-xl" src={imageLink} alt='Photo de profil' />
                             :
-                            <ImageUpload username={auth} imageLink={imageLink} setImageLink={setImageLink}/>
+                            <ImageUpload username={auth} imageLink={imageLink} setImageLink={setImageLink} />
                         }
                         <div className="px-12 flex flex-col text-left w-full">
                             <h1 className="font-bold mb-4 w-full">
@@ -56,10 +55,9 @@ export async function getServerSideProps({ req, res, params }) {
             return (error)
         });
 
-    const cookies = new Cookies(req, res);
-    const user = cookies.get('user');
+    const user = verifyToken(req)
 
-    if (!user) {
+    if (user === "A token is required for authentication") {
         return {
             props: { user: null } // will be passed to the page component as props
         }

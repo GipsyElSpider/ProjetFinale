@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Header from "../components/Header";
 import axios from "axios"
 import { useRouter } from 'next/router';
-import Cookies from 'cookies'
+import verifyToken from "../middleware/auth"
 const Register = (props) => {
     const router = useRouter()
     const [username, setUsername] = useState("");
@@ -114,9 +114,8 @@ const Register = (props) => {
 export default Register
 
 export async function getServerSideProps({ req, res }) {
-    const cookies = new Cookies(req, res)
-    const user = cookies.get('user')
-    if (user) {
+    const user = verifyToken(req)
+    if (user !== "A token is required for authentication") {
         res.statusCode = 302;
         res.setHeader("location", "/");
         res.end();

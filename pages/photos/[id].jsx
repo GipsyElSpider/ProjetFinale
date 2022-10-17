@@ -1,7 +1,7 @@
 import axios from "axios";
 import Head from 'next/head';
 import Header from "../../components/Header";
-import Cookies from 'cookies'
+import verifyToken from "../../middleware/auth"
 import { useState } from 'react';
 
 function PhotosPages({ data, user, liked }) {
@@ -85,8 +85,7 @@ function PhotosPages({ data, user, liked }) {
 }
 
 export async function getServerSideProps({ req, res, params }) {
-    const cookies = new Cookies(req, res);
-    const user = cookies.get('user');
+    const user = verifyToken(req)
 
     let config = {
         method: 'get',
@@ -101,7 +100,7 @@ export async function getServerSideProps({ req, res, params }) {
         .catch(function (error) {
             return (error)
         });
-        
+
     if (result?.status !== 200) {
         res.statusCode = 302;
         res.setHeader("location", "/photos/404");
@@ -109,7 +108,7 @@ export async function getServerSideProps({ req, res, params }) {
         return {}
     };
 
-    if (!user) {
+    if (user === "A token is required for authentication") {
         return {
             props: { data: result.data.data, user: null, liked: { message: null } }
         }

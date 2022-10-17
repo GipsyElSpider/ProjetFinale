@@ -1,7 +1,7 @@
 import axios from "axios";
 import Head from 'next/head';
 import Header from "../../components/Header";
-import Cookies from 'cookies'
+import verifyToken from "../../middleware/auth"
 import { useState } from 'react';
 import Link from "next/link";
 
@@ -36,8 +36,7 @@ function profile({ liked, user }) {
 }
 
 export async function getServerSideProps({ req, res, params }) {
-    const cookies = new Cookies(req, res);
-    const user = cookies.get('user');
+    const user = verifyToken(req)
 
     let configLike = {
         method: 'get',
@@ -53,7 +52,7 @@ export async function getServerSideProps({ req, res, params }) {
             return (error)
         });
 
-    if (!user) {
+    if (user === "A token is required for authentication") {
         res.statusCode = 302;
         res.setHeader("location", "/");
         res.end();

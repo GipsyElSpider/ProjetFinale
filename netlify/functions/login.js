@@ -1,9 +1,10 @@
 const Joi = require("joi");
 const mongoose = require('mongoose');
 const { UserModel } = require("../../model/User");
-//const { withSession, getSession } = require('netlify-functions-session-cookie');
-const crypto = require('crypto');
 const cookie = require("cookie")
+const bcrypt = require('bcrypt');
+const jwt = require("jsonwebtoken");
+
 mongoose.connect("mongodb://localhost:27017/projet-3wa", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -26,11 +27,9 @@ exports.handler = async function (event, context) {
         const hour = 3600000;
         const params = JSON.parse(event.body)
         await schema.validateAsync(params);
-        console.log(params)
 
         const user = await UserModel.find({ username: params.username });
 
-        console.log(user[0])
         if (!user[0]) {
             return {
                 statusCode: 400,
@@ -38,10 +37,17 @@ exports.handler = async function (event, context) {
             };
         };
 
-        const hash = crypto.createHash('sha256').update(params.password).digest('hex');
+        const match = bcrypt.compare(params.password, user[0].password);
 
-        if (hash === user[0].password) {
-            const myCookie = cookie.serialize('user', params.username, {
+        if (match) {
+            const token = jwt.sign(
+                { user_id: user._id, username: params.username },
+                process.env.TOKEN_KEY,
+                {
+                    expiresIn: "2h",
+                }
+            );
+            const myCookie = cookie.serialize('user', token, {
                 secure: true,
                 httpOnly: true,
                 path: '/',
