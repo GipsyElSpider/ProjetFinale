@@ -7,8 +7,8 @@ const LikeSchema = new Schema({
         unique: true
     },
     likedPhotos: {
-        type: [String],
+        type: [String]
     }
 });
 
-exports.LikeModel = model("profiles", LikeSchema);
+exports.LikeModel = model("liked", LikeSchema);

@@ -69,7 +69,7 @@ const Register = (props) => {
         <div className="flex min-h-screen flex-col items-center justify-center bg-blue-200 ">
             <Head>
                 <title>Inscription</title>
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="/favicon.svg" />
             </Head>
 
             <Header />

@@ -1,7 +1,8 @@
 const Joi = require("joi");
 const mongoose = require('mongoose');
 const { UserModel } = require("../../model/User");
-const { ProfileModel } = require("../../model/Profile")
+const { ProfileModel } = require("../../model/Profile");
+const { LikeModel } = require("../../model/Liked");
 //const { withSession, getSession } = require('netlify-functions-session-cookie');
 const crypto = require('crypto');
 const cookie = require("cookie")
@@ -32,7 +33,7 @@ exports.handler = async function (event, context) {
         await schema.validateAsync(params);
 
         const alreadyRegister = await UserModel.find({ username: params.username });
-
+        await LikeModel.create({ username: params.username });
         if (alreadyRegister[0]) {
             return {
                 statusCode: 403,

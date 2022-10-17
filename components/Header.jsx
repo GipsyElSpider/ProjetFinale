@@ -1,9 +1,9 @@
 import Link from 'next/link';
 const Header = ({ auth }) => {
     return (
-        <div className="w-full flex p-6 bg-discordGray justify-between">
+        <div className="w-full flex px-12 py-6 bg-discordGray justify-between">
             <Link href={"/"}>
-                <p className='w-1/3'>Home</p>
+                <img className="h-12 w-12" src="../data/icon-naruto.svg" alt='logo site' />
             </Link>
             {auth ?
                 <div className='flex w-1/4 justify-evenly'>

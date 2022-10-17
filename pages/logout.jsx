@@ -8,7 +8,7 @@ const Logout = () => {
         <div className="flex min-h-screen flex-col items-center justify-center">
             <Head>
                 <title>Déconnection</title>
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="/favicon.svg" />
             </Head>
         </div>
     )
