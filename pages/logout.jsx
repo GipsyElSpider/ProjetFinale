@@ -17,6 +17,7 @@ const Logout = () => {
 export default Logout
 
 export async function getServerSideProps({ req, res }) {
+    //delete cookie user
     const cookies = new Cookies(req, res)
     cookies.set('user', '', {
         httpOnly: true

@@ -4,12 +4,13 @@ import Header from "../../components/Header";
 import verifyToken from "../../middleware/auth"
 import { useState } from 'react';
 
-function PhotosPages({ data, user, liked }) {
+function PhotosPages({ data, user, liked, cookie }) {
     const [auth, setAuth] = useState(user);
     const [like, setLike] = useState(liked ? liked.message : null);
     async function handleLike(e) {
         setLike(like * -1);
         if (like === -1) {
+            // api delete like
             let config = {
                 method: 'delete',
                 url: `http://localhost:8888/api/like`,
@@ -28,13 +29,15 @@ function PhotosPages({ data, user, liked }) {
                 });
             return
         } else {
+            // api like
             let config = {
                 method: 'post',
                 url: `http://localhost:8888/api/like`,
                 headers: {},
                 data: {
                     username: user,
-                    photoID: data._id
+                    photoID: data._id,
+                    token:cookie
                 }
             };
 
@@ -129,7 +132,7 @@ export async function getServerSideProps({ req, res, params }) {
         });
 
     return {
-        props: { data: result.data.data, user, liked }
+        props: { data: result.data.data, user, liked, cookie:req.cookies.user }
     };
 };
 

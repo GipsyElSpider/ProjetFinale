@@ -3,6 +3,9 @@ const { PhotoModel } = require("../../model/Photo");
 const mongoose = require('mongoose');
 const Joi = require("joi");
 const Promise = require("bluebird");
+const jwt = require("jsonwebtoken");
+
+const config = process.env;
 
 mongoose.connect("mongodb://localhost:27017/projet-3wa", {
     useNewUrlParser: true,
@@ -12,6 +15,7 @@ mongoose.connect("mongodb://localhost:27017/projet-3wa", {
 const schema = Joi.object({
     username: Joi.string().required(),
     photoID: Joi.string().required(),
+    token: Joi.string().required()
 });
 
 exports.handler = async function (event, context) {
@@ -21,7 +25,13 @@ exports.handler = async function (event, context) {
             await schema.validateAsync(params);
 
             const allData = await LikeModel.find({ username: params.username });
-
+            const decoded = jwt.verify(params.token, config.TOKEN_KEY);
+            if (!decoded) {
+                return {
+                    statusCode: 401,
+                    body: JSON.stringify({ message: "Unauthorized" }),
+                };
+            }
             const already = allData[0].likedPhotos.filter(elem => elem === params.photoID);
 
             if (already[0] !== undefined) {

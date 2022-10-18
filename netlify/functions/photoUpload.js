@@ -37,8 +37,7 @@ exports.handler = async function (event, context) {
         };
 
         const { fields, files } = await parseMultipartFormData(event);
-        await schema.validateAsync(fields)
-        console.log(fields.token)
+        await schema.validateAsync(fields);
         const decoded = jwt.verify(fields.token, config.TOKEN_KEY);
         if (!decoded) {
             return {
