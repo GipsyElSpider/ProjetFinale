@@ -5,8 +5,10 @@ import PhotoUpload from "../components/PhotoUpload"
 import axios from 'axios';
 import Link from 'next/link';
 import verifyToken from "../middleware/auth"
+import PhotosViews from '../components/photosViews'
 const Home = (props) => {
   const [auth, setAuth] = useState(props.user);
+  console.log(props.result.data)
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <Head>
@@ -16,21 +18,10 @@ const Home = (props) => {
 
       <Header auth={auth} />
 
-      <main className="flex w-full p-8 flex-1 flex-col items-center justify-center px-20 text-center bg-bgTest">
-        {auth ? <div className='w-1/3 flex flex-col mb-8 items-center'> <Link href={"./liked/" + auth}><button className='w-1/3 mb-6 font-bold rounded-2xl px-6 py-4 bg-pink-200 border-2 border-gray-400 shadow-lg shadow-pink-400'>Mes likes</button></Link><PhotoUpload username={auth} /> </div> : null}
-        <h1 className="font-bold text-2xl">Toutes les photos</h1>
-        <div className='my-6 w-2/3 flex flex-wrap justify-evenly'>
-          {props.result.data.map(photo => (
-            <>
-              <Link href={"/photos/" + photo._id}>
-                <div className='w-5/12 p-4 rounded-xl box-border mb-10 bg-indigo-300 shadow-xl shadow-fuchsia-400'>
-                  <img className="rounded-xl" src={photo.photoLink} alt={photo.titre} />
-                  <p className='pt-2'>Photo de {photo.username}</p>
-                </div>
-              </Link>
-            </>
-          ))}
-        </div>
+      <main className="flex w-full p-8 flex-1 flex-col items-center justify-center px-20 text-center bg-bg-gradient">
+        {auth ? <div className='w-1/3 flex flex-col mb-8 items-center'> <Link href={"./liked/" + auth}><button id="myLikesBtn">Mes likes</button></Link><PhotoUpload username={auth} /> </div> : null}
+        <h1 className="font-bold text-2xl mb-6 ">Toutes les photos:</h1>
+        <PhotosViews data={props.result.data} />
       </main>
     </div>
   )
@@ -39,7 +30,7 @@ const Home = (props) => {
 export default Home
 
 export async function getServerSideProps({ req, res }) {
-  
+  //Recuperation toutes les photos
   let config = {
     method: 'get',
     url: `http://localhost:8888/api/photos`,
@@ -53,9 +44,8 @@ export async function getServerSideProps({ req, res }) {
     .catch(function (error) {
       return (error)
     });
-    
+  //Recuperation utilisateur déja connecté et retours des props en fonction de si une personnes est connectée ou non
   const user = verifyToken(req);
-
   if (user !== "A token is required for authentication") {
     return {
       props: { user, result }

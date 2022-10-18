@@ -35,6 +35,20 @@ exports.handler = async function (event, context) {
                 statusCode: 200,
                 body: JSON.stringify({ data: data[0] }),
             };
+        } else if (event.queryStringParameters.username) {
+            const data = await PhotoModel.find({ username: event.queryStringParameters.username });
+            console.log(data)
+            if (data[0] === undefined) {
+                return {
+                    statusCode: 404,
+                    body: JSON.stringify({ message: 'data not found' }),
+                };
+            };
+
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ data: data }),
+            };
         } else {
             const data = await PhotoModel.find({}).sort({ created_at: -1 });
 

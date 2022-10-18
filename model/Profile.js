@@ -6,18 +6,9 @@ const ProfileSchema = new Schema({
         type: String,
         unique: true
     },
-    profilePhoto: {
-        type: String,
+    myPhotos: {
+        type: [String]
     },
-    instagram: {
-        type: String
-    },
-    twitter: {
-        type: String
-    },
-    description: {
-        type: String
-    }
 });
 
 exports.ProfileModel = model("profiles", ProfileSchema);

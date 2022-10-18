@@ -59,7 +59,7 @@ exports.handler = async function (event, context) {
                     allData[0].likedPhotos,
                     async photo => {
                         const result = await PhotoModel.find({ _id: photo });
-                        return { photoLink: result[0].photoLink, username: result[0].username, titre: result[0].title, id: result[0]._id };
+                        return { photoLink: result[0].photoLink, username: result[0].username, titre: result[0].title, _id: result[0]._id };
                     }, { concurrency: 1 }
                 );
                 return {

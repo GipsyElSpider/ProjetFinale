@@ -45,11 +45,14 @@ const Register = (props) => {
                 return (error)
             });
             
-        if (result?.response?.status === 403) {
+        if (result?.response?.status === 409) {
             setMessage("Pseudo déja utilisé");
             return;
         }
-        if (result?.status !== 200) return
+        if (result?.status !== 200){
+            setMessage("error");
+            return;
+        };
         router.push('/');
         return
     };
@@ -66,7 +69,7 @@ const Register = (props) => {
     }; */
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-blue-200 ">
+        <div className="flex min-h-screen flex-col items-center justify-center bg-bg-gradient">
             <Head>
                 <title>Inscription</title>
                 <link rel="icon" href="/favicon.svg" />
@@ -75,10 +78,10 @@ const Register = (props) => {
             <Header />
 
             <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-                <form className='flex flex-col w-1/3 text-left p-6 border' onSubmit={handleSubmit}>
+                <form className='flex flex-col w-1/3 text-left p-6 rounded-xl border-2 bg-indigo-300' onSubmit={handleSubmit}>
                     <div className='w-full flex flex-col mb-6'>
                         {message ? <p className='font-bold text-red-600'>{message}</p> : null}
-                        <label htmlFor='username'>Pseudo:</label>
+                        <label className='text-white' htmlFor='username'>Pseudo:</label>
                         <input
                             value={username}
                             onInput={handleChangeUsername}
@@ -89,7 +92,7 @@ const Register = (props) => {
                         />
                     </div>
                     <div className='w-full flex flex-col mb-6'>
-                        <label htmlFor='password'>Mot de passe:</label>
+                        <label className='text-white' htmlFor='password'>Mot de passe:</label>
                         <input
                             value={password}
                             onInput={handleChangePassword}
@@ -100,7 +103,7 @@ const Register = (props) => {
                         />
                     </div>
                     <div className='w-full flex overflow-hidden'>
-                        <button id="btn" type="submit">Valider</button>
+                        <button className="btn" type="submit">Valider</button>
                         {/* (btn && (password === "") || username === "") ? <><div id="btn" type="submit">Valider</div></> : <><button id="btnStatic" type="submit">Valider</button></> */}
                         {/* <button id="btn" type="submit">Valider</button> */}
                     </div>

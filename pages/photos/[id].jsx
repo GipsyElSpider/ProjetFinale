@@ -51,16 +51,16 @@ function PhotosPages({ data, user, liked }) {
 
     };
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-bgTest ">
+        <div className="flex min-h-screen flex-col items-center justify-center bg-bg-gradient ">
             <Head>
-                <title>Photo</title>
+                <title>Photo {data.title}</title>
                 <link rel="icon" href="/favicon.svg" />
             </Head>
 
             <Header auth={auth} />
 
-            <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-                <div className="w-2/5 p-8 bg-indigo-300 flex rounded-2xl flex flex-col ">
+            <main className="flex w-full flex-1 flex-col items-center justify-center px-6 md:px-20 text-center">
+                <div className="mt-6 w-full lg:w-2/5 p-8 bg-indigo-300 flex rounded-2xl flex flex-col ">
                     <img src={data.photoLink} alt={data.title}></img>
                     <div className="mt-4 w-full text-left flex flex-wrap items-center">
                         {user ? <button onClick={handleLike} className="w-1/12">

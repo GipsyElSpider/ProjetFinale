@@ -32,12 +32,12 @@ exports.handler = async function (event, context) {
 
         if (!user[0]) {
             return {
-                statusCode: 400,
+                statusCode: 403,
                 body: JSON.stringify({ message: "Pseudo introuvable" }),
             };
         };
 
-        const match = bcrypt.compare(params.password, user[0].password);
+        const match = await bcrypt.compare(params.password, user[0].password);
 
         if (match) {
             const token = jwt.sign(
@@ -66,7 +66,7 @@ exports.handler = async function (event, context) {
         };
 
         return {
-            statusCode: 400,
+            statusCode: 403,
             body: JSON.stringify({ message: "Mot de passe incorrect" }),
         };
 

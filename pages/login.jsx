@@ -33,44 +33,44 @@ const Login = (props) => {
                 console.log(error)
                 return (error)
             });
-        if (result?.status === 400 && result?.response?.data?.message === "Username already use") {
-            setMessage("Pseudo déja utilisé");
+        if (result?.response?.status === 403) {
+            setMessage(result?.response?.data.message);
+            return;
+        } else if (result?.status !== 200) {
+            setMessage("error");
+            return;
         }
-        if (result?.status !== 200) return
         router.push('/');
         return
     }
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-blue-200 ">
+        <div className="flex min-h-screen flex-col items-center justify-center bg-bg-gradient ">
             <Head>
-                <title>Inscription</title>
+                <title>Connection</title>
                 <link rel="icon" href="/favicon.svg" />
             </Head>
 
             <Header />
 
             <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-                <form className='flex flex-col w-1/3 text-left p-6 border' onSubmit={handleSubmit}>
+                <form className='flex flex-col w-1/3 text-left p-6 rounded-xl border-2 bg-indigo-300' onSubmit={handleSubmit}>
                     <div className='w-full flex flex-col mb-6'>
-                        {message ? message : null}
-                        <label htmlFor='username'>Pseudo:</label>
-                        <input value={data.username} onChange={(e) => setData({ ...data, username: e.target.value })} type='text' name='username' id='username' required />
+                        {message ? <p className='font-bold text-red-600'>{message}</p> : null}
+                        <label className='text-white' htmlFor='username'>Pseudo:</label>
+                        <input value={data.username} onChange={(e) => setData({ ...data, username: e.target.value })} type='text' name='username' required />
                     </div>
                     <div className='w-full flex flex-col mb-6'>
-                        <label htmlFor='password'>Mot de passe:</label>
+                        <label className='text-white' htmlFor='password'>Mot de passe:</label>
                         <input
                             value={data.password}
                             onChange={(e) => setData({ ...data, password: e.target.value })}
                             type='password'
                             name='password'
-                            id='password'
                             required
                         />
                     </div>
                     <div className='w-full flex justify-center'>
-                        <button className='border rounded-xl w-1/2' type='submit'>
-                            Valider
-                        </button>
+                        <button className="btn" type="submit">Valider</button>
                     </div>
                 </form>
             </main>
@@ -84,13 +84,13 @@ export default Login
 export async function getServerSideProps({ req, res }) {
     const user = verifyToken(req)
     if (user) {
-      res.statusCode = 302;
-      res.setHeader("location", "/");
-      res.end();
-      return
+        res.statusCode = 302;
+        res.setHeader("location", "/");
+        res.end();
+        return
     } else {
-      return {
-        props: { user: null }
-      }
+        return {
+            props: { user: null }
+        }
     }
-  };
+};

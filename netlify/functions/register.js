@@ -33,18 +33,19 @@ exports.handler = async function (event, context) {
         const params = JSON.parse(event.body)
         await schema.validateAsync(params);
 
-        const alreadyRegister = await UserModel.find({ username: params.username });
-        await LikeModel.create({ username: params.username });
-
+        const alreadyRegister = await UserModel.find({ username: params.username, myPhotos: [] });
+        
         if (alreadyRegister[0]) {
             return {
                 statusCode: 409,
                 body: JSON.stringify({ message: "Username already use" }),
             };
         };
+
         const hash = await bcrypt.hash(params.password, saltRounds);
         const user = await UserModel.create({ username: params.username, password: hash });
-        
+        await LikeModel.create({ username: params.username });
+
         const token = jwt.sign(
             { user_id: user._id, username: params.username },
             process.env.TOKEN_KEY,
@@ -54,7 +55,7 @@ exports.handler = async function (event, context) {
         );
 
         await ProfileModel.create({ username: params.username });
-        
+
         const myCookie = cookie.serialize('user', token, {
             secure: true,
             httpOnly: true,

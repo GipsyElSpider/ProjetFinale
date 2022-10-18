@@ -1,8 +1,10 @@
+/* utilisation tailwind */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-#btn {
+.btn {
   grid-area: button;
   width:25%;
   padding: 0 1rem;
@@ -15,15 +17,28 @@
   box-sizing: border-box;
 }
 
-#btnStatic {
-  grid-area: button;
-  width:25%;
-  padding: 0 1rem;
-  //color: white;
+/* cards display with hover animation*/
 
-  font-weight: bold;
-  border-radius: 0.25rem;
-  border:2px solid;
-  cursor: pointer;
+.imageCard { 
+  transition: all .15s ease-in-out; 
+}
+
+.imageCard:hover {
+  transform: scale(1.08);
+}
+
+/* likes btn */
+
+#myLikesBtn{
+  --tw-shadow-color: #f472b6;
+  margin-bottom:1.5rem;
+  width: fit-content(100%);
+  font-weight: 700;
   box-sizing: border-box;
+  border-width: 2px;
+  padding: 1rem 1.5rem;
+  background-color: rgb(251 207 232);
+  border-color: rgb(156 163 175);
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
 }
