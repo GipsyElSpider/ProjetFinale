@@ -53,7 +53,7 @@ function PhotosPages({ data, user, liked }) {
     return (
         <div className="flex min-h-screen flex-col items-center justify-center bg-bg-gradient ">
             <Head>
-                <title>Photo {data.title}</title>
+                <title>Photo {data?.title}</title>
                 <link rel="icon" href="/favicon.svg" />
             </Head>
 

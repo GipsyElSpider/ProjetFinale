@@ -8,7 +8,6 @@ import verifyToken from "../middleware/auth"
 import PhotosViews from '../components/photosViews'
 const Home = (props) => {
   const [auth, setAuth] = useState(props.user);
-  console.log(props.result.data)
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <Head>
@@ -19,7 +18,7 @@ const Home = (props) => {
       <Header auth={auth} />
 
       <main className="flex w-full p-8 flex-1 flex-col items-center justify-center px-20 text-center bg-bg-gradient">
-        {auth ? <div className='w-1/3 flex flex-col mb-8 items-center'> <Link href={"./liked/" + auth}><button id="myLikesBtn">Mes likes</button></Link><PhotoUpload username={auth} /> </div> : null}
+        {auth ? <div className='w-1/3 flex flex-col mb-8 items-center'> <Link href={"./liked/" + auth}><button id="myLikesBtn">Mes likes</button></Link><PhotoUpload username={auth} cookie={props.cookie} /> </div> : null}
         <h1 className="font-bold text-2xl mb-6 ">Toutes les photos:</h1>
         <PhotosViews data={props.result.data} />
       </main>
@@ -48,7 +47,7 @@ export async function getServerSideProps({ req, res }) {
   const user = verifyToken(req);
   if (user !== "A token is required for authentication") {
     return {
-      props: { user, result }
+      props: { user, result, cookie:req.cookies.user }
     }
   } else {
     return {

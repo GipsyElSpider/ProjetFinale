@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Router from 'next/router';
 import { useState } from 'react';
-const PhotoUpload = ({ username }) => {
+const PhotoUpload = ({ username, cookie }) => {
     const [step, setStep] = useState(0);
     const [preview, setPreview] = useState("./data/plus-square-solid.svg")
     const [publication, setPublication] = useState({
@@ -29,7 +29,8 @@ const PhotoUpload = ({ username }) => {
         formData.append('titre', publication.titre);
         formData.append('description', publication.description);
         formData.append('username', username);
-
+        formData.append('token', cookie);
+        
         let config = {
             method: 'post',
             url: `http://localhost:8888/api/photoUpload`,

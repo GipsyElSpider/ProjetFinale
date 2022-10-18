@@ -1,17 +1,26 @@
 const mongoose = require('mongoose');
-//const { UserModel } = require("../../model/User");
 const Multipart = require('lambda-multipart');
 const sharp = require("sharp");
 const Promise = require("bluebird");
 const { createClient } = require("@supabase/supabase-js");
-const { ProfileModel } = require('../../model/Profile');
 const { uuid } = require('uuidv4');
 const { PhotoModel } = require("../../model/Photo")
+const Joi = require("joi");
+const jwt = require("jsonwebtoken");
+
+const config = process.env;
 
 const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5bnN5Ym50aWFiaGtheGtib3ZzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY2NTM5MDIyNSwiZXhwIjoxOTgwOTY2MjI1fQ.73q9xtAKdzBTDV8-2lr2gKMxGxdUuLbdYoeYLwsROB8"
+    config.NEXT_PUBLIC_SUPABASE_URL,
+    config.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
+
+const schema = Joi.object({
+    titre: Joi.string().optional(),
+    description: Joi.string().optional(),
+    username: Joi.string().required(),
+    token: Joi.string().required()
+}).required();
 
 mongoose.connect("mongodb://localhost:27017/projet-3wa", {
     useNewUrlParser: true,
@@ -28,6 +37,15 @@ exports.handler = async function (event, context) {
         };
 
         const { fields, files } = await parseMultipartFormData(event);
+        await schema.validateAsync(fields)
+        console.log(fields.token)
+        const decoded = jwt.verify(fields.token, config.TOKEN_KEY);
+        if (!decoded) {
+            return {
+                statusCode: 401,
+                body: JSON.stringify({ message: "Unauthorized" }),
+            };
+        }
         const { buffer, ext } = await cropImage(files[0]._readableState.buffer.tail.data);
         const filename = uuid();
         await supabase.storage.from('image').upload(`photos/${filename}.${ext}`, buffer, {

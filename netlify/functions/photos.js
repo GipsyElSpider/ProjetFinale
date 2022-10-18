@@ -1,15 +1,9 @@
 const mongoose = require('mongoose');
-const Joi = require('joi')
-const { PhotoModel } = require("../../model/Photo");
-const crypto = require("crypto");
+const { PhotoModel } = require('../../model/Photo');
 
 mongoose.connect("mongodb://localhost:27017/projet-3wa", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-});
-
-const schema = Joi.object({
-    id: Joi.string().required(),
 });
 
 exports.handler = async function (event, context) {
@@ -20,7 +14,7 @@ exports.handler = async function (event, context) {
                 body: JSON.stringify({ message: "Method error" }),
             };
         };
-
+        
         if (event.queryStringParameters.id) {
             const data = await PhotoModel.find({ _id: event.queryStringParameters.id });
 
@@ -37,7 +31,6 @@ exports.handler = async function (event, context) {
             };
         } else if (event.queryStringParameters.username) {
             const data = await PhotoModel.find({ username: event.queryStringParameters.username });
-            console.log(data)
             if (data[0] === undefined) {
                 return {
                     statusCode: 404,
