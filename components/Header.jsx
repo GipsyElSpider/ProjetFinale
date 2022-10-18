@@ -1,7 +1,7 @@
 import Link from 'next/link';
 const Header = ({ auth }) => {
     return (
-        <navbar /* id="header" */  className="w-full flex flex-col md:flex-row px-12 py-6 bg-discordGray justify-center md:justify-between">
+        <navbar id="header">
             <Link href={"/"}>
                 <img className="h-12 w-12 mx-auto md:mx-0" src="../data/icon-naruto.svg" alt='logo site' />
             </Link>

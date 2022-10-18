@@ -11,8 +11,8 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   padding: 1.5rem 3rem;
-  justify-content: space-between;
   background-color: rgba(54,57,63,1);
 }
 
@@ -88,7 +88,9 @@
 
 @media screen and (min-width: 768px) {
   #header {
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
   }
 
   .navbar {
