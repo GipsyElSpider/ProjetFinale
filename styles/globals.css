@@ -46,8 +46,7 @@
 }
 
 .btn {
-  grid-area: button;
-  width:25%;
+  width:fit-content(100%);
   padding: 0 1rem;
   color: white;
   font-weight: bold;

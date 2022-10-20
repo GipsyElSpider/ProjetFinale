@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
-const Multipart = require('lambda-multipart');
 const sharp = require("sharp");
-const Promise = require("bluebird");
 const { createClient } = require("@supabase/supabase-js");
 const { uuid } = require('uuidv4');
 const { PhotoModel } = require("../../model/Photo")
@@ -17,8 +15,9 @@ const supabase = createClient(
 
 const schema = Joi.object({
     titre: Joi.string().optional(),
-    description: Joi.string().optional(),
+    description: Joi.string().optional().allow(""),
     username: Joi.string().required(),
+    link: Joi.string().required(),
     token: Joi.string().required()
 }).required();
 
@@ -36,32 +35,47 @@ exports.handler = async function (event, context) {
             };
         };
 
-        const { fields, files } = await parseMultipartFormData(event);
-        await schema.validateAsync(fields);
-        const decoded = jwt.verify(fields.token, config.TOKEN_KEY);
+        await schema.validateAsync(event.queryStringParameters);
+
+        const decoded = jwt.verify(event.queryStringParameters.token, config.TOKEN_KEY);
+
         if (!decoded) {
             return {
                 statusCode: 401,
                 body: JSON.stringify({ message: "Unauthorized" }),
             };
-        }
-        const { buffer, ext } = await cropImage(files[0]._readableState.buffer.tail.data);
+        };
+
+        const { data } = await supabase.storage
+            .from('image')
+            .download(event.queryStringParameters.link);
+
+        let arrayBuf = await data.arrayBuffer();
+        const beforeCrop = Buffer.from(arrayBuf)
+        const { buffer, ext } = await cropImage(beforeCrop);
         const filename = uuid();
-        await supabase.storage.from('image').upload(`photos/${filename}.${ext}`, buffer, {
-            contentType: `image/${ext}`,
-            upsert: true,
-        });
+
+        await supabase.storage
+            .from('image')
+            .upload(`photos/${filename}.${ext}`, buffer, {
+                cacheControl: '3600',
+                upsert: false
+            });
 
         const link = `https://lynsybntiabhkaxkbovs.supabase.co/storage/v1/object/public/image/photos/${filename}.${ext}`;
 
         const dataPhotos = await PhotoModel.create({
-            username: fields.username,
-            title: fields.titre,
-            description: fields.description,
+            username: event.queryStringParameters.username,
+            title: event.queryStringParameters.titre,
+            description: event.queryStringParameters.description,
             created_at: Date.now(),
-            photoLink: link,
-            likes: 0
+            photoLink: link
         });
+
+        await supabase
+            .storage
+            .from('images')
+            .remove([event.queryStringParameters.link])
 
         return {
             statusCode: 200,
@@ -75,20 +89,6 @@ exports.handler = async function (event, context) {
             body: JSON.stringify(err),
         };
     }
-};
-
-const parseMultipartFormData = async (event) => {
-    return new Promise((resolve, reject) => {
-        const parser = new Multipart(event)
-
-        parser.on('finish', (result) => {
-            resolve({ fields: result.fields, files: result.files })
-        })
-
-        parser.on('error', (error) => {
-            return reject(error)
-        })
-    })
 };
 
 async function cropImage(imagePath) {

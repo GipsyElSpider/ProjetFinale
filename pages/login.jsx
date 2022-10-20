@@ -4,6 +4,8 @@ import Header from "../components/Header"
 import axios from "axios"
 import { useRouter } from 'next/router';
 import verifyToken from "../middleware/auth"
+import { Buffer } from 'buffer';
+
 const Login = (props) => {
     const router = useRouter()
     const [data, setData] = useState({
@@ -16,14 +18,9 @@ const Login = (props) => {
         event.preventDefault();
         let config = {
             method: 'POST',
-            url: 'http://localhost:8888/api/login',
+            url: `http://localhost:8888/api/login?username=${data.username}&password=${data.password}`,
             headers: {
             },
-            data:
-            {
-                username: data.username,
-                password: data.password
-            }
         };
 
         const result = await axios(config)
@@ -53,8 +50,8 @@ const Login = (props) => {
 
             <Header />
 
-            <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-                <form className='flex flex-col w-1/3 text-left p-6 rounded-xl border-2 bg-indigo-300' onSubmit={handleSubmit}>
+            <main className="flex w-full flex-1 flex-col items-center justify-center md:px-20 text-center">
+                <form className='flex flex-col w-5/6 md:w-1/3 text-left p-6 rounded-xl border-2 bg-indigo-300' onSubmit={handleSubmit}>
                     <div className='w-full flex flex-col mb-6'>
                         {message ? <p className='font-bold text-red-600'>{message}</p> : null}
                         <label className='text-white' htmlFor='username'>Pseudo:</label>

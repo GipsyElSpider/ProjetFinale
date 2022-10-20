@@ -3,16 +3,13 @@ import Head from 'next/head';
 import Header from "../components/Header";
 import axios from "axios"
 import { useRouter } from 'next/router';
-import verifyToken from "../middleware/auth"
+import verifyToken from "../middleware/auth";
+
 const Register = (props) => {
     const router = useRouter()
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
-    //const [btn, setBtn] = useState(0);
-    /* useEffect(() => {
-        setBtn(document.querySelector("#btn"));
-    }, []); */
 
     function handleChangeUsername(event) {
         setUsername(event.target.value)
@@ -24,16 +21,17 @@ const Register = (props) => {
     };
     async function handleSubmit(event) {
         event.preventDefault();
+        const re = new RegExp("^[a-zA-Z0-9]*$","g")
+        const verif = re.exec(username);
+        if(!verif){
+            setMessage("Le pseudo ne peux contenir que des chiffres et des lettres");
+            return
+        }
         let config = {
             method: 'POST',
-            url: 'http://localhost:8888/api/register',
+            url: `http://localhost:8888/api/register?username=${username}&password=${password}`,
             headers: {
             },
-            data:
-            {
-                username,
-                password
-            }
         };
 
         const result = await axios(config)
@@ -57,17 +55,6 @@ const Register = (props) => {
         return
     };
 
-    //let position = 0;
-
-    /* if (btn && (!(password !== "") || username === "")) {
-        btn.addEventListener("mouseover", function () {
-            position === 300 ? position = 0 : position = 300;
-            btn.style.transform = `translate(${position}%, 0px)`;
-            btn.style.transition = "all 0.3s ease";
-            return
-        });
-    }; */
-
     return (
         <div className="flex min-h-screen flex-col items-center justify-center bg-bg-gradient">
             <Head>
@@ -77,8 +64,8 @@ const Register = (props) => {
 
             <Header />
 
-            <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-                <form className='flex flex-col w-1/3 text-left p-6 rounded-xl border-2 bg-indigo-300' onSubmit={handleSubmit}>
+            <main className="flex w-full flex-1 flex-col items-center justify-center md:px-20 text-center">
+                <form className='flex flex-col w-5/6 lg:w-1/3 text-left p-6 rounded-xl border-2 bg-indigo-300' onSubmit={handleSubmit}>
                     <div className='w-full flex flex-col mb-6'>
                         {message ? <p className='font-bold text-red-600'>{message}</p> : null}
                         <label className='text-white' htmlFor='username'>Pseudo:</label>

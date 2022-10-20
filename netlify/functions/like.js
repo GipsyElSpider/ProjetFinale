@@ -21,7 +21,7 @@ const schema = Joi.object({
 exports.handler = async function (event, context) {
     try {
         if (event.httpMethod === "POST") {
-            const params = JSON.parse(event.body)
+            const params = event.queryStringParameters
             await schema.validateAsync(params);
 
             const allData = await LikeModel.find({ username: params.username });
@@ -78,8 +78,7 @@ exports.handler = async function (event, context) {
                 };
             }
         } else if (event.httpMethod === "DELETE") {
-            const params = JSON.parse(event.body)
-            await schema.validateAsync(params);
+            const params = event.queryStringParameters;
 
             await LikeModel.updateOne({ username: params.username }, { $pull: { likedPhotos: params.photoID } });
 
