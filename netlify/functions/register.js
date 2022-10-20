@@ -29,10 +29,10 @@ exports.handler = async function (event, context) {
         };
 
         const hour = 3600000;
-
-        const params = JSON.parse(event.body)
+        
+        const params = event.queryStringParameters
         await schema.validateAsync(params);
-
+        
         const alreadyRegister = await UserModel.find({ username: params.username, myPhotos: [] });
         
         if (alreadyRegister[0]) {

@@ -1,8 +1,18 @@
 import axios from 'axios'
 import Router from 'next/router';
 import { useState } from 'react';
+import { createClient } from '@supabase/supabase-js';
+import { v4 as uuidv4 } from 'uuid';
+import Loading from './loading';
+
+const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
+
 const PhotoUpload = ({ username, cookie }) => {
     const [step, setStep] = useState(0);
+    const [btnStep, setBtnStep] = useState(1);
     const [preview, setPreview] = useState("./data/plus-square-solid.svg")
     const [publication, setPublication] = useState({
         photo: null,
@@ -24,30 +34,31 @@ const PhotoUpload = ({ username, cookie }) => {
     };
 
     async function handleSubmit() {
-        let formData = new FormData();
-        formData.append('profileImage', publication.photo);
-        formData.append('titre', publication.titre);
-        formData.append('description', publication.description);
-        formData.append('username', username);
-        formData.append('token', cookie);
-        
+        if (setBtnStep === 0) return;
+        setBtnStep(0)
+        const { link } = await uploadPhoto(publication)
+
         let config = {
             method: 'post',
-            url: `http://localhost:8888/api/photoUpload`,
+            url: `http://localhost:8888/api/photoUpload?username=${username}&description=${publication.description}&link=${link}&token=${cookie}`,
             headers: {
-            },
-            data: formData
+            }
         };
 
         const result = await axios(config)
             .then(function (response) {
+
                 return (response.data);
             })
             .catch(function (error) {
                 return (error)
             });
-
+        console.log(result)
+        if (result.message === "succes") {
+            setBtnStep(1)
+        };
         Router.push(`/photos/${result.data}`)
+        return
     };
 
     if (step === 0) {
@@ -75,7 +86,11 @@ const PhotoUpload = ({ username, cookie }) => {
                         <label htmlFor='title' className='font-semibold px-4 text-white w-1/5'>Titre: </label>
                         <input value={publication.titre} onChange={e => setPublication({ ...publication, titre: e.target.value })} className='rounded-xl w-4/5 p-2' type={"text"} id='title'></input>
                     </div>
-                    <button onClick={handleSubmit} className='box-border mb-2 mx-auto py-2 px-4 rounded-xl w-fit border-2 text-white'>Valider</button>
+                    {btnStep ?
+                        <button onClick={handleSubmit} className='box-border mb-2 mx-auto py-2 px-4 rounded-xl w-fit border-2 text-white'>Valider</button>
+                        : 
+                        <Loading />
+                    }
                 </div>
             </div>
         )
@@ -83,3 +98,17 @@ const PhotoUpload = ({ username, cookie }) => {
 };
 
 export default PhotoUpload
+
+async function uploadPhoto(publication) {
+
+    const ext = publication.photo.type.split("/")
+    const filename = uuidv4();
+
+    await supabase.storage.from('image').upload(`photos/${filename}.${ext[1]}`, publication.photo, {
+        contentType: publication.photo.type,
+        upsert: true,
+    });
+
+    return { link: `photos/${filename}.${ext[1]}` }
+}
+
