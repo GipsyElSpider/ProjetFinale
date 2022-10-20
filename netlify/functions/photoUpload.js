@@ -36,7 +36,7 @@ exports.handler = async function (event, context) {
         };
 
         await schema.validateAsync(event.queryStringParameters);
-
+        // verif authentification
         const decoded = jwt.verify(event.queryStringParameters.token, config.TOKEN_KEY);
 
         if (!decoded) {
@@ -45,7 +45,7 @@ exports.handler = async function (event, context) {
                 body: JSON.stringify({ message: "Unauthorized" }),
             };
         };
-
+        // recupere la photo en taille de base
         const { data } = await supabase.storage
             .from('image')
             .download(event.queryStringParameters.link);
@@ -54,7 +54,7 @@ exports.handler = async function (event, context) {
         const beforeCrop = Buffer.from(arrayBuf)
         const { buffer, ext } = await cropImage(beforeCrop);
         const filename = uuid();
-
+        // upload la nouvelle image
         await supabase.storage
             .from('image')
             .upload(`photos/${filename}.${ext}`, buffer, {
@@ -63,7 +63,7 @@ exports.handler = async function (event, context) {
             });
 
         const link = `https://lynsybntiabhkaxkbovs.supabase.co/storage/v1/object/public/image/photos/${filename}.${ext}`;
-
+        // données mis en base
         const dataPhotos = await PhotoModel.create({
             username: event.queryStringParameters.username,
             title: event.queryStringParameters.titre,
@@ -92,6 +92,7 @@ exports.handler = async function (event, context) {
 };
 
 async function cropImage(imagePath) {
+    // Crop de l'image en 600x600 et changement de l'extension en webp
     const { data: buffer, info } = await sharp(imagePath)
         .resize(600, 600)
         .webp()

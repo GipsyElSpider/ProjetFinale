@@ -23,7 +23,7 @@ exports.handler = async function (event, context) {
         if (event.httpMethod === "POST") {
             const params = event.queryStringParameters
             await schema.validateAsync(params);
-
+            // verification auth JWT
             const allData = await LikeModel.find({ username: params.username });
             const decoded = jwt.verify(params.token, config.TOKEN_KEY);
             if (!decoded) {
@@ -32,6 +32,7 @@ exports.handler = async function (event, context) {
                     body: JSON.stringify({ message: "Unauthorized" }),
                 };
             }
+            // verif si déja like
             const already = allData[0].likedPhotos.filter(elem => elem === params.photoID);
 
             if (already[0] !== undefined) {
@@ -40,14 +41,15 @@ exports.handler = async function (event, context) {
                     body: JSON.stringify({ message: "Already liked" }),
                 };
             }
+            // ajout du like
             await LikeModel.updateOne({ username: params.username }, { $push: { likedPhotos: [params.photoID] } });
-
             return {
                 statusCode: 200,
                 body: JSON.stringify({ message: "succes" }),
             };
         } else if (event.httpMethod === "GET") {
             if (event.queryStringParameters.id) {
+                //recupere like pour une photo donnée d'un utilisateur donné
                 const allData = await LikeModel.find({ username: event.queryStringParameters.username });
                 const already = allData[0].likedPhotos.filter(elem => elem === event.queryStringParameters.id);
 
@@ -62,7 +64,7 @@ exports.handler = async function (event, context) {
                     body: JSON.stringify({ message: -1 }),
                 };
             } else {
-
+                // recuperation de toutes les photos like par un utilisateur
                 const allData = await LikeModel.find({ username: event.queryStringParameters.username });
 
                 const allPhotos = await Promise.map(
@@ -78,6 +80,7 @@ exports.handler = async function (event, context) {
                 };
             }
         } else if (event.httpMethod === "DELETE") {
+            // Supression du like d'un utilisateur
             const params = event.queryStringParameters;
 
             await LikeModel.updateOne({ username: params.username }, { $pull: { likedPhotos: params.photoID } });

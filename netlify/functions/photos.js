@@ -16,6 +16,7 @@ exports.handler = async function (event, context) {
         };
         
         if (event.queryStringParameters.id) {
+            // recupere 1 photos par ID
             const data = await PhotoModel.find({ _id: event.queryStringParameters.id });
 
             if (data[0] === undefined) {
@@ -30,6 +31,7 @@ exports.handler = async function (event, context) {
                 body: JSON.stringify({ data: data[0] }),
             };
         } else if (event.queryStringParameters.username) {
+            // recupere toutes les photos d'un utilisateur
             const data = await PhotoModel.find({ username: event.queryStringParameters.username });
             if (data[0] === undefined) {
                 return {
@@ -43,6 +45,7 @@ exports.handler = async function (event, context) {
                 body: JSON.stringify({ data: data }),
             };
         } else {
+            // recuperent toutes les phtos par dates decroissante
             const data = await PhotoModel.find({}).sort({ created_at: -1 });
 
             if (data[0] === undefined) {

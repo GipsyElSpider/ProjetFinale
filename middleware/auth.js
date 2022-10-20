@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken"
 const config = process.env;
-
+// Decode JWT Token 
 const verifyToken = (req) => {
     const token = req.cookies.user || null;
     if (!token) {

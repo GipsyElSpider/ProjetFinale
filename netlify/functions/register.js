@@ -1,7 +1,6 @@
 const Joi = require("joi");
 const mongoose = require('mongoose');
 const { UserModel } = require("../../model/User");
-const { ProfileModel } = require("../../model/Profile");
 const { LikeModel } = require("../../model/Liked");
 const cookie = require("cookie")
 const bcrypt = require('bcrypt');
@@ -32,8 +31,8 @@ exports.handler = async function (event, context) {
         
         const params = event.queryStringParameters
         await schema.validateAsync(params);
-        
-        const alreadyRegister = await UserModel.find({ username: params.username, myPhotos: [] });
+        // verif si le pseudo est disponible
+        const alreadyRegister = await UserModel.find({ username: params.username });
         
         if (alreadyRegister[0]) {
             return {
@@ -41,11 +40,11 @@ exports.handler = async function (event, context) {
                 body: JSON.stringify({ message: "Username already use" }),
             };
         };
-
+        // hash mot de passe
         const hash = await bcrypt.hash(params.password, saltRounds);
         const user = await UserModel.create({ username: params.username, password: hash });
         await LikeModel.create({ username: params.username });
-
+        // creation JWT
         const token = jwt.sign(
             { user_id: user._id, username: params.username },
             process.env.TOKEN_KEY,
@@ -53,8 +52,6 @@ exports.handler = async function (event, context) {
                 expiresIn: "2h",
             }
         );
-
-        await ProfileModel.create({ username: params.username });
 
         const myCookie = cookie.serialize('user', token, {
             secure: true,

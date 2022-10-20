@@ -27,6 +27,7 @@ const PhotoUpload = ({ username, cookie }) => {
         setStep(0)
     }
     function handleImage(e) {
+        // preview de l'image
         URL.revokeObjectURL(objectUrl)
         setPublication({ ...publication, photo: e.target.files[0] })
         const objectUrl = URL.createObjectURL(e.target.files[0]);
@@ -34,6 +35,7 @@ const PhotoUpload = ({ username, cookie }) => {
     };
 
     async function handleSubmit() {
+        //envoie de l'image sur supabase et des données par requete
         if (setBtnStep === 0) return;
         setBtnStep(0)
         const { link } = await uploadPhoto(publication)

@@ -27,6 +27,7 @@ exports.handler = async function (event, context) {
         const hour = 3600000;
         
         const params = event.queryStringParameters
+        // verif si l'utilisateur existe
         await schema.validateAsync(params);
         const user = await UserModel.find({ username: params.username });
 
@@ -36,10 +37,11 @@ exports.handler = async function (event, context) {
                 body: JSON.stringify({ message: "Pseudo introuvable" }),
             };
         };
-
+        // verif le mot de passe
         const match = await bcrypt.compare(params.password, user[0].password);
 
         if (match) {
+            // mise en place de JWT TOKEN 
             const token = jwt.sign(
                 { user_id: user._id, username: params.username },
                 process.env.TOKEN_KEY,
