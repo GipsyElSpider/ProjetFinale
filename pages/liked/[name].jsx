@@ -1,7 +1,7 @@
 import axios from "axios";
 import Head from 'next/head';
 import Header from "../../components/Header";
-import verifyToken from "../../middleware/auth"
+import verifyToken from "../../middleware/auth";
 import { useState } from 'react';
 import PhotosViews from "../../components/PhotosViews";
 
