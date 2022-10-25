@@ -1,7 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "start": "netlify dev"
+    "start": "next build",
+    "dev": "netlify dev"
   },
   "dependencies": {
     "@supabase/supabase-js": "^1.35.7",
