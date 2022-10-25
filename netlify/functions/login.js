@@ -1,14 +1,16 @@
 const Joi = require("joi");
-const mongoose = require('mongoose');
-const { UserModel } = require("../../model/User");
 const cookie = require("cookie")
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
+const { createClient } = require("@supabase/supabase-js");
 
-mongoose.connect("mongodb://localhost:27017/projet-3wa", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+const config = process.env;
+
+
+const supabase = createClient(
+    config.NEXT_PUBLIC_SUPABASE_URL,
+    config.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
 
 const schema = Joi.object({
     username: Joi.string().required(),
@@ -25,11 +27,15 @@ exports.handler = async function (event, context) {
         };
 
         const hour = 3600000;
-        
+
         const params = event.queryStringParameters
         // verif si l'utilisateur existe
         await schema.validateAsync(params);
-        const user = await UserModel.find({ username: params.username });
+        const { data: user } = await supabase
+            .from("users")
+            .select("*")
+            .match({ username: params.username })
+        //const user = await UserModel.find({ username: params.username });
 
         if (!user[0]) {
             return {

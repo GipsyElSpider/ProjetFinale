@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const sharp = require("sharp");
 const { createClient } = require("@supabase/supabase-js");
 const { uuid } = require('uuidv4');
-const { PhotoModel } = require("../../model/Photo")
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 
@@ -20,11 +19,6 @@ const schema = Joi.object({
     link: Joi.string().required(),
     token: Joi.string().required()
 }).required();
-
-mongoose.connect("mongodb://localhost:27017/projet-3wa", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
 
 exports.handler = async function (event, context) {
     try {
@@ -64,14 +58,15 @@ exports.handler = async function (event, context) {
 
         const link = `https://lynsybntiabhkaxkbovs.supabase.co/storage/v1/object/public/image/photos/${filename}.${ext}`;
         // données mis en base
-        const dataPhotos = await PhotoModel.create({
+        const { data: dataPhotos, error } = await supabase
+        .from("photos")
+        .insert({
             username: event.queryStringParameters.username,
             title: event.queryStringParameters.titre,
             description: event.queryStringParameters.description,
-            created_at: Date.now(),
             photoLink: link
         });
-
+        console.log(error)
         await supabase
             .storage
             .from('images')
@@ -79,7 +74,7 @@ exports.handler = async function (event, context) {
 
         return {
             statusCode: 200,
-            body: JSON.stringify({ message: "succes", data: dataPhotos._id })
+            body: JSON.stringify({ message: "succes", data: dataPhotos[0].id })
         };
 
     } catch (err) {

@@ -1,10 +1,12 @@
-const mongoose = require('mongoose');
-const { PhotoModel } = require('../../model/Photo');
+const { createClient } = require("@supabase/supabase-js");
 
-mongoose.connect("mongodb://localhost:27017/projet-3wa", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+const config = process.env;
+
+const supabase = createClient(
+    config.NEXT_PUBLIC_SUPABASE_URL,
+    config.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
+
 
 exports.handler = async function (event, context) {
     try {
@@ -17,7 +19,11 @@ exports.handler = async function (event, context) {
         
         if (event.queryStringParameters.id) {
             // recupere 1 photos par ID
-            const data = await PhotoModel.find({ _id: event.queryStringParameters.id });
+            const { data } = await supabase
+                .from("photos")
+                .select("*")
+                .match({ id: event.queryStringParameters.id })
+            //const data = await PhotoModel.find({ _id: event.queryStringParameters.id });
 
             if (data[0] === undefined) {
                 return {
@@ -32,7 +38,11 @@ exports.handler = async function (event, context) {
             };
         } else if (event.queryStringParameters.username) {
             // recupere toutes les photos d'un utilisateur
-            const data = await PhotoModel.find({ username: event.queryStringParameters.username });
+            const { data } = await supabase
+                .from("photos")
+                .select("*")
+                .match({ username: event.queryStringParameters.username });
+            //const data = await PhotoModel.find({ username: event.queryStringParameters.username });
             if (data[0] === undefined) {
                 return {
                     statusCode: 404,
@@ -46,11 +56,15 @@ exports.handler = async function (event, context) {
             };
         } else {
             // recuperent toutes les phtos par dates decroissante
-            const data = await PhotoModel.find({}).sort({ created_at: -1 });
-
+            
+            const { data } = await supabase
+                .from("photos")
+                .select("*")
+            //const data = await PhotoModel.find({}).sort({ created_at: -1 });
+            
             if (data[0] === undefined) {
                 return {
-                    statusCode: 400,
+                    statusCode: 401,
                     body: JSON.stringify({ message: 'data not found' }),
                 };
             };

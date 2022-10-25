@@ -13,11 +13,11 @@ function PhotosPages({ data, user, liked, cookie }) {
             // api delete like
             let config = {
                 method: 'delete',
-                url: `http://localhost:8888/api/like?username=${user}&photoID=${data._id}`,
+                url: `http://localhost:8888/api/like?username=${user}&photoID=${data.id}`,
                 headers: {},
                 data: {
                     username: user,
-                    photoID: data._id
+                    photoID: data.id
                 }
             };
             await axios(config)
@@ -32,7 +32,7 @@ function PhotosPages({ data, user, liked, cookie }) {
             // api like
             let config = {
                 method: 'post',
-                url: `http://localhost:8888/api/like?username=${user}&photoID=${data._id}&token=${cookie}`,
+                url: `http://localhost:8888/api/like?username=${user}&photoID=${data.id}&token=${cookie}`,
                 headers: {},
             };
 

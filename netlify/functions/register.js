@@ -1,20 +1,20 @@
 const Joi = require("joi");
-const mongoose = require('mongoose');
-const { UserModel } = require("../../model/User");
-const { LikeModel } = require("../../model/Liked");
 const cookie = require("cookie")
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
-
-mongoose.connect("mongodb://localhost:27017/projet-3wa", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+const { createClient } = require("@supabase/supabase-js");
 
 const schema = Joi.object({
     username: Joi.string().required(),
     password: Joi.string().required()
 });
+
+const config = process.env;
+
+const supabase = createClient(
+    config.NEXT_PUBLIC_SUPABASE_URL,
+    config.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
 
 const saltRounds = 10;
 
@@ -28,12 +28,16 @@ exports.handler = async function (event, context) {
         };
 
         const hour = 3600000;
-        
+
         const params = event.queryStringParameters
         await schema.validateAsync(params);
         // verif si le pseudo est disponible
-        const alreadyRegister = await UserModel.find({ username: params.username });
-        
+        const { data: alreadyRegister } = await supabase
+            .from('users')
+            .select("*")
+            .match({ username: params.username })
+        //const alreadyRegister = await UserModel.find({ username: params.username });
+
         if (alreadyRegister[0]) {
             return {
                 statusCode: 409,
@@ -42,8 +46,14 @@ exports.handler = async function (event, context) {
         };
         // hash mot de passe
         const hash = await bcrypt.hash(params.password, saltRounds);
-        const user = await UserModel.create({ username: params.username, password: hash });
-        await LikeModel.create({ username: params.username });
+        const { data: user } = await supabase
+            .from('users')
+            .insert({ username: params.username, password: hash })
+        //const user = await UserModel.create({ username: params.username, password: hash });
+        await supabase
+            .from('liked')
+            .insert({ username: params.username })
+        //await LikeModel.create({ username: params.username });
         // creation JWT
         const token = jwt.sign(
             { user_id: user._id, username: params.username },
