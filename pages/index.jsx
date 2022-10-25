@@ -5,7 +5,7 @@ import PhotoUpload from "../components/PhotoUpload"
 import axios from 'axios';
 import Link from 'next/link';
 import verifyToken from "../middleware/auth"
-import PhotosViews from '../components/PhotosViews'
+import PhotosViews from '../components/PhotosViews';
 const Home = (props) => {
   const [auth, setAuth] = useState(props.user);
   return (

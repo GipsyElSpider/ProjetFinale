@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Header from "../../components/Header";
 import verifyToken from "../../middleware/auth"
 import { useState } from 'react';
-import PhotosViews from '../../components/PhotosViews';
+import PhotosViews from "../../components/PhotosViews";
 
 function profile({ liked, user, likeUser }) {
     const [auth, setAuth] = useState(user);
