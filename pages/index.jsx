@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Head from 'next/head'
 import Header from "../components/Header";
 import PhotoUpload from "../components/PhotoUpload";
-import PhotosViews from '../components/PhotosViews';
+import PhotosViews from "../components/PhotosViews";
 import axios from 'axios';
 import Link from 'next/link';
 import verifyToken from "../middleware/auth";
