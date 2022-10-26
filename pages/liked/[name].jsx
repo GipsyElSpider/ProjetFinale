@@ -26,10 +26,11 @@ function profile({ liked, user, likeUser }) {
 
 export async function getServerSideProps({ req, res, params }) {
     const user = verifyToken(req)
-    
+
     let configLike = {
         method: 'get',
-        url: `http://localhost:8888/api/like?username=${params.name}`,
+        //url: `http://localhost:8888/api/like?username=${params.name}`,
+        url: `https://supav--soft-belekoy-940e21.netlify.app/api/like?username=${params.name}`,
         headers: {}
     };
 

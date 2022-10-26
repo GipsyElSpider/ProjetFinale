@@ -42,7 +42,7 @@ const PhotoUpload = ({ username, cookie }) => {
 
         let config = {
             method: 'post',
-            url: `http://localhost:8888/api/photoUpload?username=${username}&description=${publication.description}&link=${link}&token=${cookie}`,
+            url: `https://supav--soft-belekoy-940e21.netlify.app/api/photoUpload?username=${username}&description=${publication.description}&link=${link}&token=${cookie}`,
             headers: {
             }
         };

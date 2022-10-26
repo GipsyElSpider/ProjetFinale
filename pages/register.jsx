@@ -29,7 +29,7 @@ const Register = (props) => {
         }
         let config = {
             method: 'POST',
-            url: `http://localhost:8888/api/register?username=${username}&password=${password}`,
+            url: `https://supav--soft-belekoy-940e21.netlify.app/register?username=${username}&password=${password}`,
             headers: {
             },
         };

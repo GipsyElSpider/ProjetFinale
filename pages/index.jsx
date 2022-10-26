@@ -32,7 +32,7 @@ export async function getServerSideProps({ req, res }) {
   //Recuperation toutes les photos
   let config = {
     method: 'get',
-    url: `http://localhost:8888/api/photos`,
+    url: `https://supav--soft-belekoy-940e21.netlify.app/api/photos`,
     headers: {}
   };
 

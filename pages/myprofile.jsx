@@ -39,7 +39,7 @@ export async function getServerSideProps({ req, res }) {
 
     let config = {
         method: 'get',
-        url: `http://localhost:8888/api/photos?username=${user}`,
+        url: `https://supav--soft-belekoy-940e21.netlify.app/photos?username=${user}`,
         headers: {}
     };
 

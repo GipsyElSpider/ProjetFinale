@@ -18,7 +18,7 @@ const Login = (props) => {
         event.preventDefault();
         let config = {
             method: 'POST',
-            url: `http://localhost:8888/api/login?username=${data.username}&password=${data.password}`,
+            url: `https://supav--soft-belekoy-940e21.netlify.app/login?username=${data.username}&password=${data.password}`,
             headers: {
             },
         };
