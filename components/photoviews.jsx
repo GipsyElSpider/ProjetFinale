@@ -1,5 +1,5 @@
 import Link from "next/link";
-const Photosviews = ({ data }) => {
+const PhotosViews = ({ data }) => {
     return (
         <div className='my-6 w-full xl:w-2/3 flex flex-wrap justify-evenly'>
             {data.map(photo => (
@@ -16,4 +16,4 @@ const Photosviews = ({ data }) => {
     )
 };
 
-export default Photosviews
+export default PhotosViews

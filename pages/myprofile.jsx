@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Header from "../components/Header";
 import verifyToken from "../middleware/auth"
 import { useState } from 'react';
-import Photosviews from "../components/Photosviews";
+import PhotosViews from "../components/photoviews";
 
 function profile({ data, user }) {
     const [auth, setAuth] = useState(user);
@@ -20,7 +20,7 @@ function profile({ data, user }) {
                 <h1 className="font-bold mb-6 w-full">
                     Toutes mes photos:
                 </h1>
-                {data ? <Photosviews data={data.data} /> : null}
+                {data ? <PhotosViews data={data.data} /> : null}
             </main>
         </div>
     )
