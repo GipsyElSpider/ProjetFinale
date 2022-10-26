@@ -1,3 +1,6 @@
+[build]
+ command   = "yarn next build"
+
 [[redirects]]
   from = '/api/*'
   to = '/.netlify/functions/:splat'
