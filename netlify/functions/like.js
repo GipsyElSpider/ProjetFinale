@@ -1,4 +1,3 @@
-const { LikeModel } = require("../../model/Liked");
 const { createClient } = require("@supabase/supabase-js");
 const Joi = require("joi");
 const Promise = require("bluebird");
@@ -27,7 +26,7 @@ exports.handler = async function (event, context) {
                 .from('liked')
                 .select("*")
                 .match({ username: params.username })
-            //const allData = await LikeModel.find({ username: params.username });
+
             const decoded = jwt.verify(params.token, config.TOKEN_KEY);
             if (!decoded) {
                 return {
@@ -50,7 +49,7 @@ exports.handler = async function (event, context) {
                 .from('liked')
                 .update(allData[0])
                 .match({ username: params.username });
-                
+
             return {
                 statusCode: 200,
                 body: JSON.stringify({ message: "succes" }),
@@ -62,9 +61,9 @@ exports.handler = async function (event, context) {
                     .from('liked')
                     .select("*")
                     .match({ username: event.queryStringParameters.username })
-                    
+
                 const already = allData[0].likedPhotos.filter(elem => elem === event.queryStringParameters.id);
-                
+
                 if (already[0] === undefined) {
                     return {
                         statusCode: 200,
@@ -77,7 +76,7 @@ exports.handler = async function (event, context) {
                 };
             } else {
                 // recuperation de toutes les photos like par un utilisateur
-                
+
                 const { data: allData } = await supabase
                     .from('liked')
                     .select("*")
@@ -102,8 +101,16 @@ exports.handler = async function (event, context) {
         } else if (event.httpMethod === "DELETE") {
             // Supression du like d'un utilisateur
             const params = event.queryStringParameters;
-
-            await LikeModel.updateOne({ username: params.username }, { $pull: { likedPhotos: params.photoID } });
+            const { data: allData } = await supabase
+                .from('liked')
+                .select("*")
+                .match({ username: params.username });
+            const retiredLike = allData[0].likedPhotos.filter(elem => elem != params.photoID)
+            await supabase
+                .from('liked')
+                .update({ likedPhotos: retiredLike })
+                .match({ username: params.username });
+            //await LikeModel.updateOne({ username: params.username }, { $pull: { likedPhotos: params.photoID } });
 
             return {
                 statusCode: 200,

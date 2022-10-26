@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const sharp = require("sharp");
 const { createClient } = require("@supabase/supabase-js");
 const { uuid } = require('uuidv4');
