@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Head from 'next/head'
 import Header from "../components/Header";
 import PhotoUpload from "../components/PhotoUpload";
-import PhotosViews from "../components/PhotosViews";
+import Photosviews from "../../components/Photosviews";
 import axios from 'axios';
 import Link from 'next/link';
 import verifyToken from "../middleware/auth";
@@ -20,7 +20,7 @@ const Home = (props) => {
       <main className="flex w-full p-8 flex-1 flex-col items-center justify-center px-20 text-center bg-bg-gradient">
         {auth ? <div className='w-1/3 flex flex-col mb-8 items-center'> <Link href={"./liked/" + auth}><button id="myLikesBtn">Mes likes</button></Link><PhotoUpload username={auth} cookie={props.cookie} /> </div> : null}
         <h1 className="font-bold text-2xl mb-6 ">Toutes les photos:</h1>
-        {props?.result?.data ? <PhotosViews data={props.result.data} /> : null}
+        {props?.result?.data ? <Photosviews data={props.result.data} /> : null}
       </main>
     </div>
   )

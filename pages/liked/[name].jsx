@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Header from "../../components/Header";
 import verifyToken from "../../middleware/auth";
 import { useState } from 'react';
-import PhotosViews from "../components/PhotosViews";
+import Photosviews from "../../components/Photosviews";
 
 function profile({ liked, user, likeUser }) {
     const [auth, setAuth] = useState(user);
@@ -18,7 +18,7 @@ function profile({ liked, user, likeUser }) {
 
             <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center py-6">
                 <h1 className="font-bold text-2xl mb-6 ">Likes de {likeUser}: </h1>
-                <PhotosViews data={liked} />
+                <Photosviews data={liked} />
             </main>
         </div>
     )
