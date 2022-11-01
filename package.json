@@ -1,5 +1,8 @@
 {
-  "private": true,
+  "name": "projet",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
   "scripts": {
     "dev": "netlify dev"
   },
@@ -15,7 +18,7 @@
     "joi": "^17.6.2",
     "jsonwebtoken": "^8.5.1",
     "lambda-multipart": "^1.0.2",
-    "netlify-cli": "^12.0.9",
+    "netlify-cli": "^11.8.3",
     "next": "latest",
     "react": "18.1.0",
     "react-dom": "18.1.0",
