@@ -81,12 +81,10 @@ exports.handler = async function (event, context) {
         return {
             statusCode: 200,
             headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers": "Content-Type",
-                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
                 'Set-Cookie': myCookie,
                 'Cache-Control': 'no-cache',
                 'Content-Type': 'text/html',
+                "Access-Control-Allow-Origin": "*",
             },
             body: JSON.stringify({ message: "success" }),
         };

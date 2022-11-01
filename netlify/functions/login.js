@@ -76,6 +76,7 @@ exports.handler = async function (event, context) {
                     'Set-Cookie': myCookie,
                     'Cache-Control': 'no-cache',
                     'Content-Type': 'text/html',
+                    "Access-Control-Allow-Origin": "*"
                 },
                 body: JSON.stringify({ message: "success" }),
             };
