@@ -16,6 +16,12 @@ const supabase = createClient(
     config.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
+const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+};
+
 const saltRounds = 10;
 
 exports.handler = async function (event, context) {
@@ -23,6 +29,7 @@ exports.handler = async function (event, context) {
         if (event.httpMethod !== "POST") {
             return {
                 statusCode: 405,
+                headers,
                 body: JSON.stringify({ message: "Method error" }),
             };
         };
@@ -41,6 +48,7 @@ exports.handler = async function (event, context) {
         if (alreadyRegister[0]) {
             return {
                 statusCode: 409,
+                headers,
                 body: JSON.stringify({ message: "Username already use" }),
             };
         };
@@ -84,6 +92,7 @@ exports.handler = async function (event, context) {
         console.log("error", err);
         return {
             statusCode: 400,
+            headers,
             body: JSON.stringify(err),
         };
     }

@@ -19,11 +19,18 @@ const schema = Joi.object({
     token: Joi.string().required()
 }).required();
 
+const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+};
+
 exports.handler = async function (event, context) {
     try {
         if (event.httpMethod !== "POST") {
             return {
                 statusCode: 405,
+                headers,
                 body: JSON.stringify({ message: "Method error" }),
             };
         };
@@ -35,6 +42,7 @@ exports.handler = async function (event, context) {
         if (!decoded) {
             return {
                 statusCode: 401,
+                headers,
                 body: JSON.stringify({ message: "Unauthorized" }),
             };
         };
@@ -73,6 +81,7 @@ exports.handler = async function (event, context) {
 
         return {
             statusCode: 200,
+            headers,
             body: JSON.stringify({ message: "succes", data: dataPhotos[0].id })
         };
 
@@ -80,6 +89,7 @@ exports.handler = async function (event, context) {
         console.log("error", err);
         return {
             statusCode: 400,
+            headers,
             body: JSON.stringify(err),
         };
     }

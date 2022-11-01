@@ -17,11 +17,18 @@ const schema = Joi.object({
     password: Joi.string().required()
 });
 
+const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+};
+
 exports.handler = async function (event, context) {
     try {
         if (event.httpMethod !== "POST") {
             return {
                 statusCode: 405,
+                headers,
                 body: JSON.stringify({ message: "Method error" }),
             };
         };
@@ -40,6 +47,7 @@ exports.handler = async function (event, context) {
         if (!user[0]) {
             return {
                 statusCode: 403,
+                headers,
                 body: JSON.stringify({ message: "Pseudo introuvable" }),
             };
         };
@@ -75,6 +83,7 @@ exports.handler = async function (event, context) {
 
         return {
             statusCode: 403,
+            headers,
             body: JSON.stringify({ message: "Mot de passe incorrect" }),
         };
 

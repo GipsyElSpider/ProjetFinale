@@ -7,12 +7,18 @@ const supabase = createClient(
     config.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
+const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+};
 
 exports.handler = async function (event, context) {
     try {
         if (event.httpMethod !== "GET") {
             return {
                 statusCode: 405,
+                headers,
                 body: JSON.stringify({ message: "Method error" }),
             };
         };
@@ -28,12 +34,14 @@ exports.handler = async function (event, context) {
             if (data[0] === undefined) {
                 return {
                     statusCode: 404,
+                    headers,
                     body: JSON.stringify({ message: 'data not found' }),
                 };
             };
 
             return {
                 statusCode: 200,
+                headers,
                 body: JSON.stringify({ data: data[0] }),
             };
         } else if (event.queryStringParameters.username) {
@@ -46,12 +54,14 @@ exports.handler = async function (event, context) {
             if (data[0] === undefined) {
                 return {
                     statusCode: 404,
+                    headers,
                     body: JSON.stringify({ message: 'data not found' }),
                 };
             };
 
             return {
                 statusCode: 200,
+                headers,
                 body: JSON.stringify({ data: data }),
             };
         } else {
@@ -65,12 +75,14 @@ exports.handler = async function (event, context) {
             if (data[0] === undefined) {
                 return {
                     statusCode: 401,
+                    headers,
                     body: JSON.stringify({ message: 'data not found' }),
                 };
             };
 
             return {
                 statusCode: 200,
+                headers,
                 body: JSON.stringify({ data: data }),
             };
         }
@@ -78,6 +90,7 @@ exports.handler = async function (event, context) {
         console.log("error", err);
         return {
             statusCode: 400,
+            headers,
             body: JSON.stringify(err),
         };
     }
