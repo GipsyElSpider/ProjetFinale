@@ -79,7 +79,7 @@ const PhotoUpload = ({ username, cookie }) => {
                     </div>
                     <div className='w-full flex flex-wrap mb-6'>
                         <label htmlFor='uploadPhoto' className='text-white sm:px-4 cursor-pointer mb-4 mx-auto w-1/2 '>
-                            <img className='mx-auto h-fit w-fit rounded-xl' src={preview} alt='Upload Photo' />
+                            <img className='mx-auto max-h-40 sm:max-h-full h-fit w-fit rounded-xl' src={preview} alt='Upload Photo' />
                         </label>
                         <input className='hidden w-0' onChange={handleImage} type={"file"} id='uploadPhoto'></input>
                         <textarea value={publication.description} onChange={e => setPublication({ ...publication, description: e.target.value })} className='mx-auto w-4/5 rounded-2xl p-2 resize-none' placeholder='Legende de la photo'></textarea>
