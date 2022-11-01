@@ -61,7 +61,7 @@ exports.handler = async function (event, context) {
         await supabase
             .from('liked')
             .insert({ username: params.username })
-            
+
         // creation JWT
         const token = jwt.sign(
             { user_id: user._id, username: params.username },
@@ -83,7 +83,10 @@ exports.handler = async function (event, context) {
             headers: {
                 'Set-Cookie': myCookie,
                 'Cache-Control': 'no-cache',
-                'Content-Type': 'text/html'
+                'Content-Type': 'text/html',
+                'Access-Control-Allow-Origin': '*',
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE"
             },
             body: JSON.stringify({ message: "success" }),
         };
