@@ -13,7 +13,7 @@ function PhotosPages({ data, user, liked, cookie }) {
             // api delete like
             let config = {
                 method: 'delete',
-                url: `http://localhost:8888/api/like?username=${user}&photoID=${data.id}`,
+                url: `https://supav--soft-belekoy-940e21.netlify.app/api/like?username=${user}&photoID=${data.id}`,
                 headers: {},
                 data: {
                     username: user,
@@ -32,7 +32,7 @@ function PhotosPages({ data, user, liked, cookie }) {
             // api like
             let config = {
                 method: 'post',
-                url: `http://localhost:8888/api/like?username=${user}&photoID=${data.id}&token=${cookie}`,
+                url: `https://supav--soft-belekoy-940e21.netlify.app/api/like?username=${user}&photoID=${data.id}&token=${cookie}`,
                 headers: {},
             };
 
@@ -87,7 +87,7 @@ export async function getServerSideProps({ req, res, params }) {
 
     let config = {
         method: 'get',
-        url: `http://localhost:8888/api/photos?id=${params.id}`,
+        url: `https://supav--soft-belekoy-940e21.netlify.app/api/photos?id=${params.id}`,
         headers: {}
     };
 
@@ -114,7 +114,7 @@ export async function getServerSideProps({ req, res, params }) {
 
     let configLike = {
         method: 'get',
-        url: `http://localhost:8888/api/like?id=${params.id}&username=${user}`,
+        url: `https://supav--soft-belekoy-940e21.netlify.app/api/like?id=${params.id}&username=${user}`,
         headers: {}
     };
 
