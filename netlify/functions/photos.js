@@ -22,7 +22,7 @@ exports.handler = async function (event, context) {
                 body: JSON.stringify({ message: "Method error" }),
             };
         };
-        
+
         if (event.queryStringParameters.id) {
             // recupere 1 photos par ID
             const { data } = await supabase
@@ -66,12 +66,13 @@ exports.handler = async function (event, context) {
             };
         } else {
             // recuperent toutes les phtos par dates decroissante
-            
+
             const { data } = await supabase
                 .from("photos")
                 .select("*")
+                .order('created_at', { ascending: false })
             //const data = await PhotoModel.find({}).sort({ created_at: -1 });
-            
+
             if (data[0] === undefined) {
                 return {
                     statusCode: 401,
